@@ -1,9 +1,9 @@
 % Given the number of occurrence of word w in document d n_dw(d,w), and the number of topics to discover n_z, this function returns p(w|z) and p(z|d)
 function [p_w_given_z, p_z_given_d] = pLSA(n_dw, n_z)
 
-% filter out words that are too common or too obscure
+% filter out words that are too common
 for w = 1:size(n_dw,2)
-    if size(nonzeros(n_dw(:,w)),1) > size(n_dw,1)*1.5/n_z || size(nonzeros(n_dw(:,w)),1) <= size(n_dw,1)/(n_z*10)
+    if size(nonzeros(n_dw(:,w)),1) > size(n_dw,1)*1.5/n_z
         n_dw(:,w) = 0;
     end
 end
@@ -18,9 +18,9 @@ for z = 1:n_z
 end
 
 p_dw = sprand(n_dw); % p(d,w)
-L = intmin; % log-likelihood
+Lt = []; L = intmin; % log-likelihood
 improvement = intmax; % used to determine convergence
-while improvement > 0.001*abs(L)
+while improvement > 0.001
     disp('E-step');
     for d = 1:n_d
         for w = find(n_dw(d,:))
@@ -60,7 +60,11 @@ while improvement > 0.001*abs(L)
         end
     end
     improvement = L - prevL;
-
-    fprintf('L = %f, improvement = %f%%\n', L, improvement/abs(L)*100);
+    
+	% Plot the likelihood after each iteration
+    Lt = [Lt; L];
+    fprintf('%d\tL = %f, improvement = %d\n', size(Lt, 1), L, improvement);
+    plot(Lt); ylim([2*median(Lt)-L-0.1 L+(L-median(Lt))/2+0.1]);
+    drawnow; pause(0.1)
 end
-disp('Improved less than 0.1%. Algorithm converged.')
+disp('Algorithm converged.')
