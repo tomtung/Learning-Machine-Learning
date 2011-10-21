@@ -12,8 +12,8 @@ load prepared_data.mat
 %% Train the pLSA model and save the result
 n_z = 10; % number of topics to discover
 disp('Training pLSA model ...')
-[p_w_given_z, p_z_given_d, Lt] = pLSA(n_dw, n_z, 200);
-save result.mat word2Index words n_dw n_z p_w_given_z p_z_given_d Lt
+[p_w_z, p_z_d, Lt] = pLSA(n_dw, n_z, 200);
+save result.mat word2Index words n_dw n_z p_w_z p_z_d Lt
 
 %% Show the result
 show_result

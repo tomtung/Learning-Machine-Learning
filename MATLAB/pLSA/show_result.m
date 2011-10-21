@@ -13,9 +13,9 @@ ylabel('Log-likelihood');
 n_kw = 10; % Find 10 keywords
 for z = 1:n_z
     fprintf('Key words for topic %d:\n', z);
-    [S, I] = sort(p_w_given_z(:,z), 'descend');
+    [S, I] = sort(p_w_z(:,z), 'descend');
     for w = I(1:n_kw)'
-        fprintf('%d %s\t(%f)\n', w, words{w}, p_w_given_z(w,z))
+        fprintf('%d %s\t(%f)\n', w, words{w}, p_w_z(w,z))
     end
     fprintf('\n')
 end
@@ -26,7 +26,7 @@ n_d_show = 10; % Pick 10 documents
 for d = sort(randsample(size(n_dw,1), n_d_show))'
     fprintf('Topic weights for document %d:\n', d);
     for z = 1:n_z
-        fprintf('%f\t', p_z_given_d(z,d))
+        fprintf('%f\t', p_z_d(z,d))
     end
     fprintf('\n')
 end
