@@ -1,5 +1,8 @@
-% Given the number of occurrence of word w in document d n_dw(d,w), and the number of topics to discover n_z, this function returns p(w|z) and p(z|d)
-function [p_w_given_z, p_z_given_d] = pLSA(n_dw, n_z)
+function [p_w_given_z, p_z_given_d, Lt] = pLSA(n_dw, n_z, iter_num)
+% PLSA	Fit a pLSA model on given data
+%       in which n_dw(d,w) is the number of occurrence of word w 
+%		in document d, d, n_z is the number of topics to be discovered
+%		
 
 % filter out words that are too common
 for w = 1:size(n_dw,2)
@@ -18,20 +21,21 @@ for z = 1:n_z
 end
 
 p_dw = sprand(n_dw); % p(d,w)
-Lt = []; L = intmin; % log-likelihood
-improvement = intmax; % used to determine convergence
-while improvement > 0.001
-    disp('E-step');
+Lt = []; % log-likelihood
+for i = 1:iter_num
+    %disp('E-step');
     for d = 1:n_d
         for w = find(n_dw(d,:))
             for z = 1:n_z
-                n_p_z_given_dw{z}(d,w) = p_z_given_d(z,d) * p_w_given_z(w,z) * n_dw(d,w) / p_dw(d, w);
+                n_p_z_given_dw{z}(d,w) = ...
+					p_z_given_d(z,d) * p_w_given_z(w,z) * ...
+					n_dw(d,w) / p_dw(d, w);
             end
         end
     end
     
-    disp('M-step');
-    disp('update p(z|d)')
+    %disp('M-step');
+    %disp('update p(z|d)')
     concat = cat(2, n_p_z_given_dw{:}); % make n_p_z_given_dw{:}(d,:)) possible
     for d = 1:n_d
         for z = 1:n_z
@@ -40,7 +44,7 @@ while improvement > 0.001
         p_z_given_d(:,d) = p_z_given_d(:,d) / sum(concat(d,:));
     end
     
-    disp('update p(w|z)')
+    %disp('update p(w|z)')
     for z = 1:n_z
         for w = 1:n_w
             p_w_given_z(w,z) = sum(n_p_z_given_dw{z}(:,w));
@@ -48,8 +52,8 @@ while improvement > 0.001
         p_w_given_z(:,z) = p_w_given_z(:,z) / sum(n_p_z_given_dw{z}(:));
     end
 
-    % update p(d,w) and calculate likelihood to determine convergence
-    prevL = L; L = 0;
+    % update p(d,w) and calculate likelihood
+    L = 0;
     for d = 1:n_d
         for w = find(n_dw(d,:))
             p_dw(d,w) = 0;
@@ -59,12 +63,10 @@ while improvement > 0.001
             L = L + n_dw(d,w) * log(p_dw(d, w));
         end
     end
-    improvement = L - prevL;
     
-	% Plot the likelihood after each iteration
     Lt = [Lt; L];
-    fprintf('%d\tL = %f, improvement = %d\n', size(Lt, 1), L, improvement);
-    plot(Lt); ylim([2*median(Lt)-L-0.1 L+(L-median(Lt))/2+0.1]);
-    drawnow; pause(0.1)
+    %plot(Lt); ylim([2*median(Lt)-L-0.1 L+(L-median(Lt))/2+0.1]);
+    %drawnow; pause(0.1)
 end
-disp('Algorithm converged.')
+
+end

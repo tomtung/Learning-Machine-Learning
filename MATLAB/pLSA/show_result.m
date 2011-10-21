@@ -1,6 +1,16 @@
 % This script prints the result saved in result.mat
+
+%% Load result data from result.mat
 load result.mat
-n_kw = 10; % find 10 keywords for each topic
+
+%% Plot the history of log-likelihood
+figure;
+plot(Lt);
+xlabel('Number of iterations');
+ylabel('Log-likelihood');
+
+%% Find keywords for each topic
+n_kw = 10; % Find 10 keywords
 for z = 1:n_z
     fprintf('Key words for topic %d:\n', z);
     [S, I] = sort(p_w_given_z(:,z), 'descend');
@@ -11,7 +21,8 @@ for z = 1:n_z
 end
 fprintf('\n')
 
-n_d_show = 10; % show p(z|d) for first 10 documents
+%% Randomly pick documents and show their p(z|d) for each z
+n_d_show = 10; % Pick 10 documents
 for d = sort(randsample(size(n_dw,1), n_d_show))'
     fprintf('Topic weights for document %d:\n', d);
     for z = 1:n_z
