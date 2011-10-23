@@ -4,13 +4,6 @@ function [p_w_z, p_z_d, Lt] = pLSA(n_dw, n_z, iter_num)
 %		in document d, d, n_z is the number of topics to be discovered
 %		
 
-% filter out words that are too common
-for w = 1:size(n_dw,2)
-    if size(nonzeros(n_dw(:,w)),1) > size(n_dw,1)*1.5/n_z
-        n_dw(:,w) = 0;
-    end
-end
-
 % pre-allocate space
 [n_d, n_w] = size(n_dw); % max indices of d and w
 p_z_d = rand(n_z, n_d); % p(z|d)

@@ -30,4 +30,11 @@ fclose(fid);
 n_dw = n_dw(1:nDoc,1:size(word2Index));
 words = words(1:size(word2Index));
 
+% filter out words that are too common
+for w = 1:size(n_dw,2)
+    if length(nonzeros(n_dw(:,w))) > size(n_dw,1)*1.5/n_z
+        n_dw(:,w) = 0;
+    end
+end
+
 save prepared_data.mat word2Index words n_dw
