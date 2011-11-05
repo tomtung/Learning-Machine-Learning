@@ -1,18 +1,20 @@
-%% Machine Learning Online Class
-%  Exercise 1: Linear regression with multiple variables
+%% Multivariate Linear Regression (with feature normalization)
+%
+% Motivating Task:
+%   Predeicting housing prices.
+% Data:
+%   data_uni.txt
+%       - column 1: the size of the house (in square feet)
+%       - column 2: is the number of bedrooms
+%       - column 3: the price of the house
 %
 
 %% Initialization
-
-%% ================ Part 1: Feature Normalization ================
-
-%% Clear and Close Figures
 clear all; close all; clc
 
+%% Load & Normalize Data
 fprintf('Loading data ...\n');
-
-%% Load Data
-data = load('ex1data2.txt');
+data = load('data_multi.txt');
 X = data(:, 1:2);
 y = data(:, 3);
 m = length(y);
@@ -25,24 +27,17 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 % Scale features and set them to zero mean
-fprintf('Normalizing Features ...\n');
-
 [X mu sigma] = featureNormalize(X);
 
 % Add intercept term to X
 X = [ones(m, 1) X];
 
 
-%% ================ Part 2: Gradient Descent ================
-
-fprintf('Running gradient descent ...\n');
-
-% Choose some alpha value
+%% Linear Regression via Gradient Descent
 alpha = 0.6;
 num_iters = 100;
-
-% Init Theta and Run Gradient Descent 
 theta = zeros(3, 1);
+fprintf('Running gradient descent ...\n');
 [theta, J_history] = gradientDescent(X, y, theta, alpha, num_iters);
 
 % Plot the convergence graph
@@ -54,26 +49,21 @@ ylabel('Cost J');
 % Display gradient descent's result
 fprintf('Theta computed from gradient descent: \n');
 fprintf(' %f \n', theta);
-fprintf(' Cost = %d\n ', computeCost(X,y,theta));
-fprintf('\n');
+fprintf('Cost = %d\n\n', computeCost(X,y,theta));
 
 % Estimate the price of a 1650 sq-ft, 3 br house
-price = 0; % You should change this
+fprintf('Predicting using trained model:\n')
 x = [1; (1650-mu(1))/sigma(1); (3-mu(2))/sigma(2)];
 price = theta' * x;
-
-fprintf(['Predicted price of a 1650 sq-ft, 3 br house ' ...
-         '(using gradient descent):\n $%f\n'], price);
+fprintf('- For a 1650 sq-ft, 3 br house, predicted price = $%f\n' , price);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
-%% ================ Part 3: Normal Equations ================
+%% Linear Regression via Normal Equations
 
-fprintf('Solving with normal equations...\n');
-
-%% Load Data
-data = csvread('ex1data2.txt');
+% Load Data
+data = csvread('data_multi.txt');
 X = data(:, 1:2);
 y = data(:, 3);
 m = length(y);
@@ -82,20 +72,18 @@ m = length(y);
 X = [ones(m, 1) X];
 
 % Calculate the parameters from the normal equation
+fprintf('Solving with normal equations...\n');
 theta = normalEqn(X, y);
 
 % Display normal equation's result
 fprintf('Theta computed from the normal equations: \n');
 fprintf(' %f \n', theta);
-fprintf(' Cost = %d\n ', computeCost(X,y,theta));
+fprintf('Cost = %d\n ', computeCost(X,y,theta));
 fprintf('\n');
 
 
 % Estimate the price of a 1650 sq-ft, 3 br house
-price = 0; % You should change this
+fprintf('Predicting using trained model:\n')
 x = [1; 1650; 3];
 price = theta' * x;
-
-fprintf(['Predicted price of a 1650 sq-ft, 3 br house ' ...
-         '(using normal equations):\n $%f\n'], price);
-
+fprintf('- For a 1650 sq-ft, 3 br house, predicted price = $%f\n' , price);
