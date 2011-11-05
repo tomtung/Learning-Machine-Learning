@@ -10,3 +10,7 @@ pause;
 %% Logistic Regression (binary, not linear, regularized)
 fprintf('Logistic Regression (binary, not linear, regularized):\n');
 run_bi_reg
+
+%% Logistic Regression (multi-class, linear, regularized)
+fprintf('Logistic Regression (multi-class, linear, regularized):\n');
+run_multi
