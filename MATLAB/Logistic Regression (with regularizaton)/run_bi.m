@@ -1,4 +1,4 @@
-%% Logistic Regression (binary, linearly separable)
+%% Logistic Regression (binary, linear)
 %
 % Motivating Task:
 %   Suppose that you want to determine each applicant's chance of admission

@@ -14,7 +14,7 @@
 %
 
 %% Initialization
-clear all; close all; clc
+clear all; close all;
 
 %% Data Plotting
 fprintf('Plotting Data ...\n')

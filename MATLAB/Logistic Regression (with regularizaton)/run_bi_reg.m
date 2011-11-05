@@ -1,4 +1,4 @@
-%% Logistic Regression (binary, not linearly separable, regularized)
+%% Logistic Regression (binary, not linear, regularized)
 %
 % Motivating Task:
 %   Suppose that you want to predict whether microchips from a fabrication

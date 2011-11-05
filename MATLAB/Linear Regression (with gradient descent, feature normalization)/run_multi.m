@@ -10,7 +10,7 @@
 %
 
 %% Initialization
-clear all; close all; clc
+clear all; close all;
 
 %% Load & Normalize Data
 fprintf('Loading data ...\n');
