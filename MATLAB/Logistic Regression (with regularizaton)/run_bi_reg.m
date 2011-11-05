@@ -1,12 +1,22 @@
-%% Machine Learning Online Class - Exercise 2: Logistic Regression
+%% Logistic Regression (binary, not linearly separable, regularized)
+%
+% Motivating Task:
+%   Suppose that you want to predict whether microchips from a fabrication
+%   plant passes quality assurance (QA), during which each microchip goes
+%   through various tests to ensure it is functioning correctly. You have
+%   the test results for some microchips on two different tests, and
+%   whether they were accepted or rejected.
+% Data:
+%   data_bi_reg.txt
+%       - column 1 & 2: scores on two tests
+%       - column 3: accepted or rejected
+%
+
 %% Initialization
-clear all; close all; clc
+clear all; close all;
 
 %% Load Data
-%  The first two columns contains the exam scores and the third column
-%  contains the label.
-
-data = csvread('ex2data2.txt');
+data = csvread('data_bi_reg.txt');
 X = data(:, [1, 2]); y = data(:, 3);
 
 plotData(X, y);
@@ -23,12 +33,10 @@ legend('y = 1', 'y = 0')
 hold off;
 
 
-%% =========== Part 1: Regularized Logistic Regression ============
-%  In this part, you are given a dataset with data points that are not
-%  linearly separable. However, you would still like to use logistic 
-%  regression to classify the data points. 
-%
-%  To do so, you introduce more features to use -- in particular, you add
+%% Regularized Logistic Regression
+%  Data points in the given dataset with are not linearly separable. In
+%  order to use logistic regression to classify the data points, we
+%  introduce more features to use -- in particular, we add
 %  polynomial features to our data matrix (similar to polynomial
 %  regression).
 %
@@ -42,22 +50,6 @@ X = mapFeature(X(:,1), X(:,2));
 % Initialize fitting parameters
 initial_theta = zeros(size(X, 2), 1);
 
-% Set regularization parameter lambda to 1
-lambda = 1;
-
-% Compute and display initial cost and gradient for regularized logistic
-% regression
-[cost, grad] = costFunctionReg(initial_theta, X, y, lambda);
-
-fprintf('Cost at initial theta (zeros): %f\n', cost);
-
-fprintf('\nProgram paused. Press enter to continue.\n');
-pause;
-
-%% ============= Part 2: Regularization and Accuracies =============
-% Initialize fitting parameters
-initial_theta = zeros(size(X, 2), 1);
-
 % Set regularization parameter lambda to 1 (you should vary this)
 lambda = 1;
 
@@ -68,6 +60,10 @@ options = optimset('GradObj', 'on', 'MaxIter', 400);
 [theta, J, exit_flag] = ...
 	fminunc(@(t)(costFunctionReg(t, X, y, lambda)), initial_theta, options);
 
+fprintf('\nProgram paused. Press enter to continue.\n');
+pause;
+
+%% Accuracies
 % Plot Boundary
 plotDecisionBoundary(theta, X, y);
 hold on;
@@ -84,5 +80,3 @@ hold off;
 p = predict(theta, X);
 
 fprintf('Train Accuracy: %f\n', mean(double(p == y)) * 100);
-
-
