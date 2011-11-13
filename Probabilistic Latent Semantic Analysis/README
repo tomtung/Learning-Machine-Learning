@@ -1,0 +1,6 @@
+Execute the run.m script to train pLSA model on provided data. (It takes hours.)
+Delete prepared_data.mat if you need to reload data.txt.
+You can replace data.txt with your own training data (1 document per line).
+
+My notes on pLSA (written in Chinese):
+http://blog.tomtung.com/2011/10/plsa/
